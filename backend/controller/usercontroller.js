@@ -41,3 +41,38 @@ exports.signupHandler = async (req,res) =>{
     }
 }
 //login page
+exports.loginHandler = async (req,res)=>{
+    try{
+        const {email, password} = req.body;
+
+        //find person present in db or not
+        const person = await User.findOne({email});
+        if(!person){
+            return res.status(404).json({
+                success: false,
+                message: "user nor register go to signin page"
+            })
+        }
+        //compare password
+       if(bcrypt.compareSync(password, person.password)) {
+        return res.status(200).json({
+            success: false,
+            message: "user login successfully"
+        })
+       }
+       else{
+        return res.status(404).json({
+            success: false,
+            message:"password does not match try again"
+        })
+       }
+    }
+    catch(error){
+        console.log("server problem");
+        console.log(error)
+        return res.status(500).json({
+            success: false,
+            error: error.message
+        })
+    }
+}
