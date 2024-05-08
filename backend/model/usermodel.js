@@ -3,17 +3,17 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
     userName:{
-        type: String,
+        type: "String",
         required: true,
-        // unique: true,
+        unique: true,
     },
     email:{
-        type: String,
+        type: "String",
         required: true,
-        // unique: true,
+        unique: true,
     },
     password:{
-        type: String,
+        type: "String",
         required: true,
     }
 },

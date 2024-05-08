@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function Signup() {
   const [formData , SetFormData] = useState({ });
   const [loading , setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const navigate =useNavigate();
 
   function changeHandler(event){
     SetFormData({
@@ -31,10 +32,13 @@ export default function Signup() {
     const data = await response.json();
     if(data.success === false){
       setError(data.message);
+      // console.log(error);
+      // console.log(data);
       setLoading(false);
       return;
     }
-    setLoading(false)
+    setLoading(false);
+    navigate("/login");
     console.log(data)
 
   }
@@ -56,6 +60,9 @@ export default function Signup() {
         <Link to='/login'>
           <span className='text-blue-700'>Login</span>
         </Link>
+      </div>
+      <div>
+        {/* {error && <P className="text-red-600 mt-5">{error}</P>} */}
       </div>
     </div>
   )
