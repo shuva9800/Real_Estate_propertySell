@@ -3,6 +3,7 @@ const app = express();
 const {dbconnect} = require("./config/database");
 const dotenv= require("dotenv");
 const signupRouter = require('./routes/userrouter');
+const cookieParser = require('cookie-parser')
 
 
 dotenv.config();
@@ -12,6 +13,7 @@ app.listen(PORT, ()=>{
 });
 
 app.use(express.json());
+app.use(cookieParser());
 //database connection
 dbconnect();
 

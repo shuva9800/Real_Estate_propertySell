@@ -1,5 +1,10 @@
 const User = require('../model/usermodel');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { SiTrueup } = require('react-icons/si');
+require("dotenv").config();
+// console.log(".env file")
+// console.log(process.env.jwt_secret);
 
 
 exports.signupHandler = async (req,res) =>{
@@ -44,6 +49,7 @@ exports.signupHandler = async (req,res) =>{
 exports.loginHandler = async (req,res)=>{
     try{
         const {email, password} = req.body;
+        // console.log(req.body)
 
         //find person present in db or not
         const person = await User.findOne({email});
@@ -53,11 +59,21 @@ exports.loginHandler = async (req,res)=>{
                 message: "user nor register go to signin page"
             })
         }
+      
+        console.log(person)
         //compare password
-       if(bcrypt.compareSync(password, person.password)) {
-        return res.status(200).json({
-            success: false,
-            message: "user login successfully"
+       if(await bcrypt.compare(password, person.password)) {
+        const token =  jwt.sign({id: person._id}, process.env.jwt_secret);
+        person.password = "undefined";
+        
+        return res.cookie("loginToken",token,{
+                httpOnly: true,
+                expires: new Date(Date.now() + 60*1000 )
+        }, ).status(200).json({
+            success: true,
+            message: "user login successfully",
+            data: person
+
         })
        }
        else{
