@@ -1,11 +1,18 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Oauth from '../components/Oauth';
+import { useDispatch, useSelector } from 'react-redux';
+import { signInFalior, signInStart, signInSuccess } from '../redux/user/userSlice';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Signup() {
   const [formData , SetFormData] = useState({ });
-  const [loading , setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  // const [loading , setLoading] = useState(false);
+  // const [error, setError] = useState(null);
+  const loading = useSelector((state)=> state.user.loading);
+  const error = useSelector((state)=> state.user.error);
+  const dispatch = useDispatch();
   const navigate =useNavigate();
 
   function changeHandler(event){
@@ -18,7 +25,8 @@ export default function Signup() {
 
   async function submitHandler(event){
     event.preventDefault();
-    setLoading(true);
+    // setLoading(true);
+    dispatch(signInStart());
     const response = await fetch('/api/v1/login',
       {
         method: 'POST',
@@ -32,16 +40,15 @@ export default function Signup() {
 
     const data = await response.json();
     if(data.success === false){
-    try{
-      setError(data.message);
-      setLoading(false);
+      // setError(data.message);
+      // setLoading(false);
+      dispatch(signInFalior(data.message));
       return;
+   
     }
-    catch(error){
-      setLoading(false);
-    }
-    }
-    setLoading(false);
+    // setLoading(false);
+    dispatch(signInSuccess(data));
+    toast.success("login success")
     navigate("/");
     console.log(data)
 

@@ -10,6 +10,12 @@ exports.signupHandler = async (req,res) =>{
     try{
         console.log(req.body)
         const {username, email, password} = req.body;
+        if(!username || !email || !password){
+          return res.status(400).json({
+            success: false,
+            message:"all field to be filled"
+          })
+        }
         const findPerson = await User.findOne({email});
         console.log("hello-",findPerson);
         if(findPerson){
@@ -48,8 +54,13 @@ exports.signupHandler = async (req,res) =>{
 exports.loginHandler = async (req,res)=>{
     try{
         const {email, password} = req.body;
-        // console.log(req.body)
-
+        if(!email || !password){
+            return res.status(401).json({
+                success: false,
+                message:"fill all the field",
+            })
+        }
+        
         //find person present in db or not
         const person = await User.findOne({email});
         if(!person){

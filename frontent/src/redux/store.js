@@ -1,5 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { persistReducer } from 'redux-persist';
+import userReducer from './user/userSlice';
+
+
 export const store = configureStore({
-  reducer: {persistReducer},
+  reducer: {user: userReducer},
 })
