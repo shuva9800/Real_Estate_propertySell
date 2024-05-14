@@ -6,7 +6,6 @@ export default function Signup() {
   const [formData , SetFormData] = useState({ });
   const [loading , setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [occureError, setOccureError] = useState(false);
   const navigate =useNavigate();
 
   function changeHandler(event){
@@ -33,12 +32,14 @@ export default function Signup() {
 
     const data = await response.json();
     if(data.success === false){
+    try{
       setError(data.message);
-      // console.log(error);
-      // console.log(data);
-      setOccureError(true);
       setLoading(false);
       return;
+    }
+    catch(error){
+      setLoading(false);
+    }
     }
     setLoading(false);
     navigate("/");
@@ -69,6 +70,11 @@ export default function Signup() {
           {error}
         </span>)}
       </div>
+      {/* <label>
+      hello
+        <input type='file' id='file' onChange={changeHandler} className='hidden'>
+        </input>
+      </label> */}
     </div>
   )
 }
