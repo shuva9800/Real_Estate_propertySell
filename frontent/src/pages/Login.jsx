@@ -10,8 +10,8 @@ export default function Signup() {
   const [formData , SetFormData] = useState({ });
   // const [loading , setLoading] = useState(false);
   // const [error, setError] = useState(null);
-  const loading = useSelector((state)=> state.user.loading);
-  const error = useSelector((state)=> state.user.error);
+  const { loading, error} = useSelector((state)=> state.user);
+  // const error = useSelector((state)=> state.user.error);
   const dispatch = useDispatch();
   const navigate =useNavigate();
 
@@ -26,7 +26,8 @@ export default function Signup() {
   async function submitHandler(event){
     event.preventDefault();
     // setLoading(true);
-    dispatch(signInStart());
+    try{
+      dispatch(signInStart());
     const response = await fetch('/api/v1/login',
       {
         method: 'POST',
@@ -47,10 +48,15 @@ export default function Signup() {
    
     }
     // setLoading(false);
-    dispatch(signInSuccess(data));
+    dispatch(signInSuccess(data.data));
     toast.success("login success")
     navigate("/");
     console.log(data)
+    }
+    catch(error){
+      dispatch(signInFalior(error));
+      return;
+    }
 
   }
   return (

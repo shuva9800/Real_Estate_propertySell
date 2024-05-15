@@ -47,7 +47,7 @@ export default function Signup() {
       return;
     }
     // setLoading(false);
-    dispatch(signInSuccess(data))
+    dispatch(signInSuccess(data.user))
     navigate("/login");
     console.log(data)
 
