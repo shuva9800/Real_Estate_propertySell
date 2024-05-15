@@ -6,6 +6,12 @@ export default function Home() {
   console.log(currentUser);
   return (
    
-    <div>{currentUser.email}</div>
+    <div>
+      {/* <p>{
+       ( currentUser) &&(<span>{currentUser.email}</span>)
+      
+      }</p> */}
+      <h1>hello bro</h1>
+    </div>
   )
 }

@@ -8,7 +8,7 @@ const{signupHandler,loginHandler, google} = require('../controller/usercontrolle
 
 router.post('/signup', signupHandler);
 router.post('/login', loginHandler);
-// router.post('/google', google);
+router.post('/google', google);
 
 
 
