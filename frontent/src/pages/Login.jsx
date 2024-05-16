@@ -83,11 +83,7 @@ export default function Signup() {
           {error}
         </span>)}
       </div>
-      {/* <label>
-      hello
-        <input type='file' id='file' onChange={changeHandler} className='hidden'>
-        </input>
-      </label> */}
+    
     </div>
   )
 }
