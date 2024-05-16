@@ -9,8 +9,8 @@ export default function Signup() {
   // const [loading , setLoading] = useState(false);
   // const [error, setError] = useState(null);
 
-  const loading = useSelector((state)=> state.user.loading);
-  const error = useSelector((state)=> state.user.error);
+  const { loading , error} = useSelector((state)=> state.user);
+  // const error = useSelector((state)=> state.user.error);
 
   const dispatch = useDispatch()
 

@@ -3,14 +3,13 @@ import { useSelector } from 'react-redux'
 
 export default function Home() {
   const {currentUser} = useSelector((state)=>state.user);
-  console.log(currentUser);
   return (
    
     <div>
-      {/* <p>{
+      <p>{
        ( currentUser) &&(<span>{currentUser.email}</span>)
       
-      }</p> */}
+      }</p>
       <h1>hello bro</h1>
     </div>
   )
