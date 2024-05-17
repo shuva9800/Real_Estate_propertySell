@@ -3,7 +3,9 @@ const app = express();
 const {dbconnect} = require("./config/database");
 const dotenv= require("dotenv");
 const signupRouter = require('./routes/userrouter');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const cloudinary = require('./config/cloudinaryUpload');
+const fileUpload = require('express-fileupload');
 
 
 dotenv.config();
@@ -16,6 +18,15 @@ app.use(express.json());
 app.use(cookieParser());
 //database connection
 dbconnect();
+//cloudinary connection
+cloudinary();
+app.use(fileUpload(
+    {
+        useTempFiles : true,
+        tempFileDir : '/tmp/'
+    }
+));
+
 
 app.get("/", (req,res)=>{
     return res.status(200).json({

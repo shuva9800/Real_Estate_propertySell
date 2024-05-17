@@ -37,3 +37,54 @@
 //     next(error);
 //   }
 // };
+const User = require('../model/usermodel');
+const {imageUploadToCloudinary} = require('../utils/fileUpload');
+const bcrypt = require('bcryptjs');
+require("dotenv").config();
+
+
+exports.updateUser = async (req,res)=>{
+   try{
+    const userId = req.params.id;
+    const {userName,email,password} = req.body;
+    const profilePhoto = req.files.profilePhoto;
+    //find by id 
+    const profileUser = await User.findById({_id: userId});
+    if(!profileUser){
+        return res.status(404).json({
+            success: false,
+            message: "you can update your profile only"
+        })
+    }
+    let hashPassword = null;
+    if(password){
+         hashPassword = bcrypt.hashSync(password,10);
+    }
+    const imageValue= await imageUploadToCloudinary(profilePhoto, process.env.FOLDER_NAME);
+
+    const updatedProfile = await User.findByIdAndUpdate({_id:userId},
+        {
+            userName: userName,
+            email: email,
+            password: hashPassword,
+            avater: imageValue.secure_url,
+        },
+        {new:true}
+    )
+    updatedProfile.password = "undefined";
+    return res.status(200).json({
+        success:true,
+        message :"profile updated successfully",
+        updatedProfile
+
+    })
+
+   }
+   catch(error){
+    return res.status(500).json({
+        success:false,
+        message: "server error",
+        error:error.message,
+    })
+   }
+}
