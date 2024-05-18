@@ -5,12 +5,54 @@ export default function Profile() {
    const {currentUser,loading} = useSelector((state)=> state.user);
    const fileRef = useRef(null);
    const [file , setFile] = useState(undefined);
-   console.log("file is:-",file)
+   console.log("file is:-",file);
+   const [formData, setFormData] =useState({ });
+   //current user id
+   const userid = currentUser._id;
+
    function changeHandler(event) {
-    console.log(event)
+    setFormData({
+      ...formData,
+      [event.target.id] : event.target.value,
+    });
    }
-   function submitHandler(){
-    console.log("hello")
+  async function submitHandler(event){
+    event.preventDefault();
+    // setLoading(true);
+    formData.file = file;
+    // const data = new FormData();
+    
+    console.log(formData)
+
+    try{
+      // dispatch(signInStart());
+    const response = await fetch(`/api/v1/updateprofile/${userid}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json',
+
+        },
+        body: JSON.stringify(formData),
+
+      },
+    );
+
+    const data = await response.json();
+    if(data.success === false){
+      
+      dispatch(signInFalior(data.message));
+      return;
+   
+    }
+    dispatch(signInSuccess(data.data));
+    toast.success("login success")
+    navigate("/");
+    console.log(data)
+    }
+    catch(error){
+      dispatch(signInFalior(error));
+      return;
+    }
    }
   return (
     <div className=' max-w-lg mx-auto p-3 '>
@@ -22,8 +64,8 @@ export default function Profile() {
         />
         <img onClick={()=>fileRef.current.click()} src={currentUser.avatar} className='h-24 w-24 object-cover rounded-full cursor-pointer self-center mt-2'/>
 
-        <input type='text' placeholder="Username"className='p-3 border rounded-lg' id='username'value={currentUser.userName}  onChange={changeHandler} />
-        <input type='email' placeholder='email' className='p-3 border rounded-lg' id='email' value={currentUser.email} onChange={changeHandler}/>
+        <input type='text' placeholder="Username"className='p-3 border rounded-lg' id='username'  onChange={changeHandler} />
+        <input type='email' placeholder='email' className='p-3 border rounded-lg' id='email'  onChange={changeHandler}/>
         <input type='password' placeholder='password' className='p-3 border rounded-lg' id='password' onChange={changeHandler}/>
         <button disabled={loading} className='p-3 text-white bg-slate-700 rounded-lg uppercase hover:opacity-95 disabled:bg-opacity-80'>
         {

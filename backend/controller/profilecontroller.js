@@ -44,7 +44,11 @@ require("dotenv").config();
 
 
 exports.updateUser = async (req,res)=>{
+    // console.log("inside ueser update controller" , req.body);
+    // console.log(req.params.id)
+    // console.log("file is", req.files);
    try{
+    console.log("inside ueser update controller" , req.body)
     const userId = req.params.id;
     const {userName,email,password} = req.body;
     const profilePhoto = req.files.profilePhoto;
@@ -87,4 +91,25 @@ exports.updateUser = async (req,res)=>{
         error:error.message,
     })
    }
+}
+
+//delete profile
+
+exports.deleteProfile = async (req,res)=>{
+    try{
+        const {id}= req.params;
+        const deleteaccount = await User.findByIdAndDelete({_id:id});
+        return res.status(200).json({
+            success: true,
+            message:"account deleted successfully",
+            data:deleteaccount
+        })
+    }
+    catch(error){
+        return res.status(500).json({
+            success:false,
+            message: "server error",
+            error:error.message,
+        })
+    }
 }
