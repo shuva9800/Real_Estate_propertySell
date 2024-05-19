@@ -44,9 +44,9 @@ require("dotenv").config();
 
 
 exports.updateUser = async (req,res)=>{
-    // console.log("inside ueser update controller" , req.body);
-    // console.log(req.params.id)
-    // console.log("file is", req.files);
+    console.log("inside ueser update controller" , req.body);
+    console.log(req.params.id)
+    console.log("file is", req.files);
    try{
     console.log("inside ueser update controller" , req.body)
     const userId = req.params.id;

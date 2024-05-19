@@ -1,8 +1,12 @@
-import React, { useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useRef, useState} from 'react'
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux'
+import { deleteUserStart, deleteUserSuccessful, deleteUserfaliors } from '../redux/user/userSlice';
 
 export default function Profile() {
-   const {currentUser,loading} = useSelector((state)=> state.user);
+  const navigate = useNavigate();
+   const {currentUser,loading,error} = useSelector((state)=> state.user);
+   const dispatch = useDispatch();
    const fileRef = useRef(null);
    const [file , setFile] = useState(undefined);
    console.log("file is:-",file);
@@ -32,7 +36,7 @@ export default function Profile() {
         headers: { 'Content-Type': 'application/json',
 
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(file),
 
       },
     );
@@ -54,6 +58,34 @@ export default function Profile() {
       return;
     }
    }
+   //profile delete
+  async function profileDelete(){
+    try{
+      dispatch(deleteUserStart());
+      const response = await fetch(`/api/v1/delete/${userid}`,
+      {
+        method: 'DELETE',
+        // headers: { 'Content-Type': 'application/json',
+
+        // },
+
+      },
+    );
+
+   
+    const value = response.json();
+    if(value.success == false){
+      dispatch(deleteUserfaliors(value.message));
+    }
+    dispatch(deleteUserSuccessful());
+    navigate('/signup');
+
+    }
+    catch(error){
+      console.log(error);
+      dispatch(deleteUserfaliors(error.message))
+    }
+  }
   return (
     <div className=' max-w-lg mx-auto p-3 '>
        <h1 className='text-3xl text-center font-semibold my-7'> Profile</h1>
@@ -77,9 +109,12 @@ export default function Profile() {
         </button>  */}
       </form>
       <div className='flex justify-between mt-5'>
-        <span className='text-red-700 cursor-pointer '>Delete account</span>
+        <span onClick={profileDelete} className='text-red-700 cursor-pointer '>Delete account</span>
         <span className='text-red-700 cursor-pointer '>Sign out</span>
       </div>
+      {/* <div>
+        <span className='text-red-800 mt-5'>{error?(error):("")}</span>
+      </div> */}
      
     </div>
   )
