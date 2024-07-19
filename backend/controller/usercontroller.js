@@ -115,14 +115,18 @@ exports.google = async (req, res) => {
           .status(200)
           .json(rest);
       } else {
+        // const generatedPassword =
+        //   Math.random().toString(36).slice(-8) +
+        //   Math.random().toString(36).slice(-8);
+
         const generatedPassword =
-          Math.random().toString(36).slice(-8) +
-          Math.random().toString(36).slice(-8);
+          Math.random().toString(36) + Math.random().toString(36);
         const hashedPassword = bcrypt.hashSync(generatedPassword, 10);
         const newUser = new User({
           userName:
             req.body.name.split(' ').join('').toLowerCase() +
-            Math.random().slice(-4),
+            Math.random(),
+            // .slice(-4),
           email: req.body.email,
           password: hashedPassword,
           avatar: req.body.photo,
