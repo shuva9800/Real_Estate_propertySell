@@ -50,7 +50,7 @@ exports.updateUser = async (req,res)=>{
    try{
     console.log("inside ueser update controller" , req.body)
     const userId = req.params.id;
-    const {userName,email,password} = req.body;
+    const {userName,email,password,avater} = req.body;
     const profilePhoto = req.files.profilePhoto;
     //find by id 
     const profileUser = await User.findById({_id: userId});
@@ -64,7 +64,6 @@ exports.updateUser = async (req,res)=>{
     if(password){
          hashPassword = bcrypt.hashSync(password,10);
     }
-    const imageValue= await imageUploadToCloudinary(profilePhoto, process.env.FOLDER_NAME);
 
     const updatedProfile = await User.findByIdAndUpdate({_id:userId},
         {
