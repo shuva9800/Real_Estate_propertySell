@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState} from 'react'
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux'
 import {getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
-import { deleteUserStart, deleteUserSuccessful, deleteUserfaliors } from '../redux/user/userSlice';
+import { deleteUserStart, deleteUserSuccessful, deleteUserfaliors, updateUserStart,updateUserSuccess,updateUserFailure } from '../redux/user/userSlice';
 import { app } from '../firebase';
+import { toast } from 'react-toastify';
 
 export default function Profile() {
-  const navigate = useNavigate();
    const {currentUser,loading,error} = useSelector((state)=> state.user);
    const dispatch = useDispatch();
    const fileRef = useRef(null);
@@ -51,8 +50,7 @@ export default function Profile() {
     );
   };
 
-   //current user id
-   const userid = currentUser._id;
+  
 
    function changeHandler(event) {
     setFormData({
@@ -64,39 +62,33 @@ export default function Profile() {
    //form submit
   async function submitHandler(event){
     event.preventDefault();
-    // setLoading(true);
-    formData.file = file;
-    // const data = new FormData();
-    
-    console.log(formData)
-
     try{
-      // dispatch(signInStart());
-    const response = await fetch(`/api/v1/updateprofile/${userid}`,
+      //set loading true
+      dispatch(updateUserStart());
+    const response = await fetch(`/api/v1/updateprofile/${currentUser._id}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json',
 
         },
-        body: JSON.stringify(file),
+        body: JSON.stringify(formData),
 
       },
     );
 
     const data = await response.json();
-    if(data.success === false){
+    console.log("inside profile section", data);
+      if(data.success === false){
       
-      dispatch(signInFalior(data.message));
+      dispatch(updateUserFailure(data.message));
       return;
    
     }
-    dispatch(signInSuccess(data.data));
-    toast.success("login success")
-    navigate("/");
-    console.log(data)
+    dispatch(updateUserSuccess(data.data));
+    toast.success("update success")
     }
     catch(error){
-      dispatch(signInFalior(error));
+      dispatch(updateUserFailure(error.message));
       return;
     }
    }
@@ -144,8 +136,8 @@ export default function Profile() {
               : <span></span>
             }
           </p>
-        <input type='text' placeholder="Username"className='p-3 border rounded-lg' id='username'  onChange={changeHandler} />
-        <input type='email' placeholder='email' className='p-3 border rounded-lg' id='email'  onChange={changeHandler}/>
+        <input type='text' placeholder="Username"className='p-3 border rounded-lg' id='username' defaultValue={currentUser.userName} onChange={changeHandler} />
+        <input type='email' placeholder='email' className='p-3 border rounded-lg' id='email' defaultValue={currentUser.email}  onChange={changeHandler}/>
         <input type='password' placeholder='password' className='p-3 border rounded-lg' id='password' onChange={changeHandler}/>
         <button disabled={loading} className='p-3 text-white bg-slate-700 rounded-lg uppercase hover:opacity-95 disabled:bg-opacity-80'>
         {
@@ -160,9 +152,11 @@ export default function Profile() {
         <span onClick={profileDelete} className='text-red-700 cursor-pointer '>Delete account</span>
         <span className='text-red-700 cursor-pointer '>Sign out</span>
       </div>
-      {/* <div>
-        <span className='text-red-800 mt-5'>{error?(error):("")}</span>
-      </div> */}
+      <div>
+        {error && (<span className="text-red-600 mt-5">
+          {error}
+        </span>)}
+      </div>
      
     </div>
   )

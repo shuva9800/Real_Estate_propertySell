@@ -38,20 +38,20 @@
 //   }
 // };
 const User = require('../model/usermodel');
-const {imageUploadToCloudinary} = require('../utils/fileUpload');
 const bcrypt = require('bcryptjs');
 require("dotenv").config();
 
 
 exports.updateUser = async (req,res)=>{
-    console.log("inside ueser update controller" , req.body);
-    console.log(req.params.id)
-    console.log("file is", req.files);
    try{
-    console.log("inside ueser update controller" , req.body)
     const userId = req.params.id;
-    const {userName,email,password,avater} = req.body;
-    const profilePhoto = req.files.profilePhoto;
+    if(req.user.id !== userId){
+        return res.status(404).json({
+            success:false,
+            message:"you can update only your account"
+        })
+    }
+
     //find by id 
     const profileUser = await User.findById({_id: userId});
     if(!profileUser){
@@ -60,25 +60,26 @@ exports.updateUser = async (req,res)=>{
             message: "you can update your profile only"
         })
     }
-    let hashPassword = null;
-    if(password){
-         hashPassword = bcrypt.hashSync(password,10);
+    if(req.body.password){
+        req.body.password= bcrypt.hashSync(req.body.password,10);
     }
 
     const updatedProfile = await User.findByIdAndUpdate({_id:userId},
-        {
-            userName: userName,
-            email: email,
-            password: hashPassword,
-            avater: imageValue.secure_url,
-        },
+    {
+        $set:{
+            userName: req.body.username,
+            email:req.body.email,
+            password: req.body.password,
+            avatar: req.body.avatar,
+        }
+    },
         {new:true}
     )
     updatedProfile.password = "undefined";
     return res.status(200).json({
         success:true,
         message :"profile updated successfully",
-        updatedProfile
+        data:updatedProfile
 
     })
 

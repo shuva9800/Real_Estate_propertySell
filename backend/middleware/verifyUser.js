@@ -3,7 +3,7 @@ require("dotenv").config()
 
 exports.checkAuthentication = async (req,res,next)=>{
 try{
-    const token = req.body.token || req.cookies.access_token || req.header("Authorization").replace('Bearer ', '');
+    const token = req.body.token || req.cookies.loginToken;
     if(!token || token===undefined){
         return res.status(401).json({
             success: false,
@@ -11,24 +11,24 @@ try{
         })
     }
     try{
-        const decode = jwt.verify(token, process.env.SECRET_KEY);
+        const decode = jwt.verify(token, process.env.jwt_secret);
         console.log(decode);
-        req.findPerson= decode;
+        req.user= decode;
     }
     catch(err){
-        console.log(err);
         return res.status(500).json({
             success: false,
-            message: "error occure while decode token"
+            message: "error occure while decode token",
+            error: err.message
         })
     }
     next();
 }
 catch(error){
-    console.log(error);
     return res.status(401).json({
         success:false,
-        message: " error while token checking for auhhentatication"
+        message: " error while token checking for auhhentatication",
+        error: error.message
     })
 }
 }

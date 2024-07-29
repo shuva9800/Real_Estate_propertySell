@@ -8,7 +8,6 @@ require("dotenv").config();
 
 exports.signupHandler = async (req,res) =>{
     try{
-        console.log(req.body)
         const {username, email, password} = req.body;
         if(!username || !email || !password){
           return res.status(400).json({
@@ -26,17 +25,18 @@ exports.signupHandler = async (req,res) =>{
         }
        
         const hasPassword = bcrypt.hashSync(password, 10);
-        // const newUser = new User({ userName : username, email, password: hasPassword });
-        // await newUser.save();
-        const user = await User.create({
-            userName: username,
-            email,
-            password:hasPassword,
-        })
+        const newUser = new User({ userName : username, email, password: hasPassword });
+        await newUser.save();
+        // const user = await User.create({
+        //     userName: username,
+        //     email,
+        //     password:hasPassword,
+        // })
+        newUser.password = "undefined";
         return res.status(200).json({
             success:true,
             message:"User Signin successfully",
-            user:user
+            user:newUser
         })
 
 
@@ -62,7 +62,7 @@ exports.loginHandler = async (req,res)=>{
         }
         
         //find person present in db or not
-        const person = await User.findOne({email});
+        const person = await User.findOne({email:email});
         if(!person){
             return res.status(404).json({
                 success: false,
@@ -72,7 +72,9 @@ exports.loginHandler = async (req,res)=>{
       
         console.log(person)
         //compare password
-       if(await bcrypt.compare(password, person.password)) {
+        const validPassword = bcrypt.compareSync(password, person.password);
+
+       if( validPassword) {
         const token =  jwt.sign({id: person._id}, process.env.jwt_secret);
         person.password = "undefined";
         
@@ -82,6 +84,7 @@ exports.loginHandler = async (req,res)=>{
         }, ).status(200).json({
             success: true,
             message: "user login successfully",
+            token,
             data: person
 
         })
