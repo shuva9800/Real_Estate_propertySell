@@ -105,6 +105,7 @@ exports.deleteProfile = async (req,res)=>{
         }
         const {id}= req.params;
         const deleteaccount = await User.findByIdAndDelete({_id:id});
+        res.clearCookie('loginToken');
         // res.clearcookie("loginToken")
         return res.status(200).json({
             success: true,

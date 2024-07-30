@@ -114,7 +114,7 @@ exports.google = async (req, res) => {
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
         const { password: pass, ...rest } = user._doc;
         res
-          .cookie('access_token', token, { httpOnly: true , expires: new Date(Date.now() + 24*60*60*1000 )})
+          .cookie('loginToken', token, { httpOnly: true , expires: new Date(Date.now() + 24*60*60*1000 )})
           .status(200)
           .json(rest);
       } else {
@@ -140,7 +140,7 @@ exports.google = async (req, res) => {
         const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
         const { password: pass, ...rest } = newUser._doc;
         res
-          .cookie('access_token', token, { httpOnly: true })
+          .cookie('loginToken', token, { httpOnly: true })
           .status(200)
           .json(rest);
       }
@@ -159,7 +159,7 @@ exports.google = async (req, res) => {
 
   exports.signOut = async (req, res) => {
     try {
-      res.clearCookie('aloginToken');
+      res.clearCookie('loginToken');
       res.status(200).json('User has been logged out!');
     } catch (error) {
       return res.status(500).json({

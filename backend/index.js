@@ -6,6 +6,7 @@ const signupRouter = require('./routes/userrouter');
 const cookieParser = require('cookie-parser');
 const cloudinary = require('./config/cloudinaryUpload');
 const fileUpload = require('express-fileupload');
+const listingRouter = require('./routes/listing.route')
 
 
 dotenv.config();
@@ -36,3 +37,4 @@ app.get("/", (req,res)=>{
 })
 ///routing use
 app.use('/api/v1',signupRouter)
+app.use('/api/v1/listing',listingRouter)
