@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState} from 'react'
-import {useNavigate} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import {getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { deleteUserStart, deleteUserSuccessful, deleteUserfaliors, updateUserStart,updateUserSuccess,updateUserFailure, signoutFaliors, signInStart, signoutSuccessful } from '../redux/user/userSlice';
@@ -166,6 +166,7 @@ const handelSignout = async ()=>{
           loading? 'Updating...' : 'Update'
         }
         </button> 
+        <Link to='/create-listing' className='bg-green-700 p-3 rounded-lg uppercase text-center hover:opacity-90 text-white'>Create Listing</Link>
       </form>
       <div className='flex justify-between mt-5'>
         <span onClick={profileDelete} className='text-red-700 cursor-pointer '>Delete account</span>
