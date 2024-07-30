@@ -97,8 +97,15 @@ exports.updateUser = async (req,res)=>{
 
 exports.deleteProfile = async (req,res)=>{
     try{
+        if(req.user.id !== req.params.id){
+            return res.satus(404).json({
+                success:false,
+                message:"you can delete only your account"
+            })
+        }
         const {id}= req.params;
         const deleteaccount = await User.findByIdAndDelete({_id:id});
+        // res.clearcookie("loginToken")
         return res.status(200).json({
             success: true,
             message:"account deleted successfully",

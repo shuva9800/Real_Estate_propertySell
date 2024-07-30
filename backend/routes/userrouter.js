@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 
-const{signupHandler,loginHandler, google} = require('../controller/usercontroller');
+const{signupHandler,loginHandler, google, signOut} = require('../controller/usercontroller');
 const {updateUser,deleteProfile} = require('../controller/profilecontroller');
 const { checkAuthentication } = require('../middleware/verifyUser');
 
@@ -14,7 +14,9 @@ router.post('/google', google);
 //updation
 router.post('/updateprofile/:id',checkAuthentication,updateUser)
 
-router.delete('/delete/:id', deleteProfile)
+router.delete('/delete/:id', checkAuthentication,deleteProfile)
+//sign out
+router.get('/signout',signOut)
 
 
 

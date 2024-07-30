@@ -45,11 +45,26 @@ const initialState = {
         deleteUserfaliors: (state,action)=>{
             state.loading = false;
             state.error= action.payload;
-        }
+        },
+        signoutStart:(state)=>{
+            state.loading = true;
+        },
+        signoutSuccessful:(state)=>{
+            state.loading = false;
+            state.currentUser= null;
+            state.error = null;
+        },
+        signoutFaliors: (state,action)=>{
+            state.loading = false;
+            state.error= action.payload;
+        },
     }
   })
 
-  export const { signInStart, signInSuccess, signInFalior,updateUserStart,deleteUserStart, updateUserSuccess,updateUserFailure,deleteUserSuccessful,deleteUserfaliors} = userSlice.actions;
+  export const { signInStart, signInSuccess, signInFalior,updateUserStart,deleteUserStart, 
+    updateUserSuccess,updateUserFailure,deleteUserSuccessful,deleteUserfaliors,
+    signoutStart,signoutSuccessful,signoutFaliors
+} = userSlice.actions;
 
   export default userSlice.reducer
 

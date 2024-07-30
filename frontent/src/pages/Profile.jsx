@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState} from 'react'
+import {useNavigate} from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import {getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
-import { deleteUserStart, deleteUserSuccessful, deleteUserfaliors, updateUserStart,updateUserSuccess,updateUserFailure } from '../redux/user/userSlice';
+import { deleteUserStart, deleteUserSuccessful, deleteUserfaliors, updateUserStart,updateUserSuccess,updateUserFailure, signoutFaliors, signInStart, signoutSuccessful } from '../redux/user/userSlice';
 import { app } from '../firebase';
 import { toast } from 'react-toastify';
 
@@ -16,6 +17,7 @@ export default function Profile() {
    const [fileUploadError, setFileUploadError] = useState(false);
    //from data porpuse
    const [formData, setFormData] =useState({ });
+   const navigate = useNavigate()
 
 
    //image upload in fire base
@@ -77,7 +79,6 @@ export default function Profile() {
     );
 
     const data = await response.json();
-    console.log("inside profile section", data);
       if(data.success === false){
       
       dispatch(updateUserFailure(data.message));
@@ -96,22 +97,21 @@ export default function Profile() {
   async function profileDelete(){
     try{
       dispatch(deleteUserStart());
-      const response = await fetch(`/api/v1/delete/${userid}`,
+      const response = await fetch(`/api/v1/delete/${currentUser._id}`,
       {
         method: 'DELETE',
-        // headers: { 'Content-Type': 'application/json',
-
-        // },
-
       },
     );
 
    
-    const value = response.json();
-    if(value.success == false){
-      dispatch(deleteUserfaliors(value.message));
+    const data = response.json();
+    console.log("delete account",data)
+    if(data.success == false){
+      dispatch(deleteUserfaliors(data.message));
+      return;
     }
-    dispatch(deleteUserSuccessful());
+    dispatch(deleteUserSuccessful(data.data));
+    toast.error("Delete user successfully")
     navigate('/signup');
 
     }
@@ -120,6 +120,28 @@ export default function Profile() {
       dispatch(deleteUserfaliors(error.message))
     }
   }
+//signout
+
+const handelSignout = async ()=>{
+  try{
+    dispatch(signInStart());
+    const res = await fetch('/api/v1/signout');
+    const data =await res.json();
+    console.log("signout function", data)
+    if(data.success === false ){
+      dispatch(signoutFaliors(data.message));
+      return;
+    }
+    dispatch(signoutSuccessful(data));
+    navigate('/login');
+  }
+  catch(error){
+    dispatch(signoutFaliors(error.message));
+  }
+}
+
+
+
   return (
     <div className=' max-w-lg mx-auto p-3 '>
        <h1 className='text-3xl text-center font-semibold my-7'> Profile</h1>
@@ -144,13 +166,10 @@ export default function Profile() {
           loading? 'Updating...' : 'Update'
         }
         </button> 
-        {/* <button disabled={loading} className='p-3 text-white bg-green-700 rounded-lg uppercase hover:opacity-95 disabled:bg-opacity-80'>
-          createListing
-        </button>  */}
       </form>
       <div className='flex justify-between mt-5'>
         <span onClick={profileDelete} className='text-red-700 cursor-pointer '>Delete account</span>
-        <span className='text-red-700 cursor-pointer '>Sign out</span>
+        <span onClick={handelSignout} className='text-red-700 cursor-pointer '>Sign out</span>
       </div>
       <div>
         {error && (<span className="text-red-600 mt-5">
