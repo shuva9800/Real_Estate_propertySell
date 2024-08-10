@@ -147,7 +147,7 @@ export default function CreateListing() {
               console.log("inside success false")
               setError(data.error)
             }
-            navigate(`/listing/${data.data._id}`)
+            navigate(`/listing/${data._id}`)
 
         }
         catch(error){

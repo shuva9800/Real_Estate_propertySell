@@ -5,8 +5,11 @@ import {getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/s
 import { deleteUserStart, deleteUserSuccessful, deleteUserfaliors, updateUserStart,updateUserSuccess,updateUserFailure, signoutFaliors, signInStart, signoutSuccessful } from '../redux/user/userSlice';
 import { app } from '../firebase';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 export default function Profile() {
+ const  data = useRef();
+ 
    const {currentUser,loading,error} = useSelector((state)=> state.user);
    const dispatch = useDispatch();
    const fileRef = useRef(null);
@@ -18,6 +21,10 @@ export default function Profile() {
    //from data porpuse
    const [formData, setFormData] =useState({ });
    const navigate = useNavigate()
+   //error for show listing
+   const [showListingerror , setshowListingerror]= useState(false);
+   const [userListing, setUserListing]= useState([]);
+   console.log(userListing)
 
 
    //image upload in fire base
@@ -140,7 +147,24 @@ const handelSignout = async ()=>{
   }
 }
 
+//for show listing
+const handelShowListing = async ()=>{
+  try{
+    setshowListingerror(false);
+    const response = await axios.get(`/api/v1/getlisting/${currentUser._id}` );
+   const data = response.data;
+   setUserListing(data)
 
+  //  if(data.data.success === false){
+  //   setshowListingerror(true);
+  //   return;
+  //  }
+    console.log("listind details is", response.data)
+  }
+  catch(error){
+    setshowListingerror(true);
+  }
+}
 
   return (
     <div className=' max-w-lg mx-auto p-3 '>
@@ -177,6 +201,29 @@ const handelSignout = async ()=>{
           {error}
         </span>)}
       </div>
+      <button onClick={handelShowListing} className='text-green-700 w-full '>Show Listing</button>
+      <p className='text-red-700 mt-5 text-sm'>{showListingerror? ("error occure in show liisting"):""}</p>
+      {userListing && userListing.length > 0 && 
+        <div className='flex flex-col gap-4'>
+          <p className='text-center text-2xl'>Your Listing</p>
+          {
+              userListing.map((list)=>(<div key={list._id} className='flex border border-gray-700 w-full justify-between items-center p-3 rounded-lg gap-4'>
+              <Link to={`/listing/${data._id}`}>
+              <img src={list.imageUrls[0]} className='w-16 h-16 object-contain '/>
+              </Link>
+              <Link to={`/listing/${data._id}`}>
+              <p className='text-slate-600 hover:underline font-semibold truncate flex-1'>{list.name}</p>
+              </Link>
+      
+              <div className='flex flex-col gap-2'>
+                <button className='text-red-700 uppercase'>Delete</button>
+                <button className='text-green-700 uppercase'>edit</button>
+              </div>
+            </div>))
+          }
+        </div>
+      
+      }
      
     </div>
   )
