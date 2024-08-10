@@ -24,8 +24,6 @@ export default function Profile() {
    //error for show listing
    const [showListingerror , setshowListingerror]= useState(false);
    const [userListing, setUserListing]= useState([]);
-   console.log(userListing)
-
 
    //image upload in fire base
   useEffect(()=>{
@@ -152,18 +150,26 @@ const handelShowListing = async ()=>{
   try{
     setshowListingerror(false);
     const response = await axios.get(`/api/v1/getlisting/${currentUser._id}` );
-   const data = response.data;
+    const data = response.data;
    setUserListing(data)
-
-  //  if(data.data.success === false){
-  //   setshowListingerror(true);
-  //   return;
-  //  }
-    console.log("listind details is", response.data)
   }
   catch(error){
     setshowListingerror(true);
   }
+}
+
+//delete listing 
+const deletelistingHandler = async (listingId) =>{
+  try{
+    const response = await axios.delete(`/api/v1/listing/delete/${listingId}`);
+    const data = response.data;
+    console.log(data);
+    setUserListing((prev)=> prev.filter((item)=> item._id !== listingId))
+  }
+  catch(error){
+    console.log(error.message)
+  }
+
 }
 
   return (
@@ -216,7 +222,7 @@ const handelShowListing = async ()=>{
               </Link>
       
               <div className='flex flex-col gap-2'>
-                <button className='text-red-700 uppercase'>Delete</button>
+                <button className='text-red-700 uppercase' onClick={()=>deletelistingHandler(list._id)}>Delete</button>
                 <button className='text-green-700 uppercase'>edit</button>
               </div>
             </div>))
