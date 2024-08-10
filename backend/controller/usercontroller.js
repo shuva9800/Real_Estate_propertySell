@@ -16,7 +16,6 @@ exports.signupHandler = async (req,res) =>{
           })
         }
         const findPerson = await User.findOne({email});
-        console.log("hello-",findPerson);
         if(findPerson){
             return res.status(400).json({
                 success:false,
@@ -70,7 +69,6 @@ exports.loginHandler = async (req,res)=>{
             })
         }
       
-        console.log(person)
         //compare password
         const validPassword = bcrypt.compareSync(password, person.password);
 

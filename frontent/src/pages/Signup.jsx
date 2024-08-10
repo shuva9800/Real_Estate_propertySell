@@ -67,7 +67,7 @@ export default function Signup() {
         <Oauth/>
       </form>
       <div className='flex gap-2 mt-5'>
-        <p>Have an accunt?</p>
+        <p>Have an account?</p>
         <Link to='/login'>
           <span className='text-blue-700'>Login</span>
         </Link>
