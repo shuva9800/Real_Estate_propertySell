@@ -14,13 +14,4 @@ router.post('/update/:id', checkAuthentication, updateListing);
 
 
 
-
-
-
-
-
-
-
-
-
 module.exports = router

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 
-const{signupHandler,loginHandler, google, signOut} = require('../controller/usercontroller');
+const{signupHandler,loginHandler, google, signOut, getUsaerListing} = require('../controller/usercontroller');
 const {updateUser,deleteProfile} = require('../controller/profilecontroller');
 const { checkAuthentication } = require('../middleware/verifyUser');
 
@@ -17,6 +17,9 @@ router.post('/updateprofile/:id',checkAuthentication,updateUser)
 router.delete('/delete/:id', checkAuthentication,deleteProfile)
 //sign out
 router.get('/signout',signOut)
+//get listing item for the user 
+router.get('/getlisting/:id', checkAuthentication, getUsaerListing);
+
 
 
 

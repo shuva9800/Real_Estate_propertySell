@@ -1,7 +1,7 @@
 const User = require('../model/usermodel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { SiTrueup } = require('react-icons/si');
+const Listing = require("../model/listing.model")
 require("dotenv").config();
 
 
@@ -133,7 +133,6 @@ exports.google = async (req, res) => {
           avatar: req.body.photo,
         });
         newUser.password= "undefined";
-        // console.log("newuser", newUser);
         await newUser.save();
         const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
         const { password: pass, ...rest } = newUser._doc;
@@ -167,3 +166,28 @@ exports.google = async (req, res) => {
       })
     }
   };
+
+ //get listing item for sppecific user
+  exports.getUsaerListing = async (req,res)=>{
+    try{
+     
+
+      if(req.user.id === req.params.id ){
+        const listingItem = await Listing.find({userRef:req.params.id});
+        return res.status(200).json(listingItem);
+      }
+     else{
+      return res.status(404).json({
+        success: false,
+        message:"you can show your own listing items"
+      })
+     }
+    }
+    catch(error){
+      return res.status(500).json({
+        success:false,
+        message: "server error",
+        error:error.message,
+    })
+    }
+  }
