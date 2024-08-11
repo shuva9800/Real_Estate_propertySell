@@ -7,7 +7,7 @@ import Login from './pages/Login'
 import Profile from './pages/Profile'
 import Header from './components/Header'
 import CreateListing from './pages/CreateListing'
-import Listing from './pages/Listing'
+import ListingItem from './pages/ListingItem'
 // import Privateroute from './components/Privateroute'
 
 
@@ -22,7 +22,7 @@ export default function App() {
       <Route path='/login' element={<Login/>}/>
       <Route path='/profile' element={<Profile/>}/>
       <Route path='/create-listing' element={<CreateListing/>}/>
-      {/* <Route path='/listing/:id' element={<Listing/>}/> */}
+      <Route path='/listing/:id' element={<ListingItem/>}/>
 
       {/* <Route element={<Privateroute/>}>
           <Route path='/profile' element={Profile}/>

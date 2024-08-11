@@ -141,13 +141,11 @@ export default function CreateListing() {
             setError(null);
             const response = await axios.post('/api/v1/listing/create', formData);
             const data = response.data;
-            console.log(data)
             setLoading(false);
             if(data.success === false){
-              console.log("inside success false")
               setError(data.error)
             }
-            navigate(`/listing/${data._id}`)
+            navigate(`/listing/${data.data._id}`)
 
         }
         catch(error){

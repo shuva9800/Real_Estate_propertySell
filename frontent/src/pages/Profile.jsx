@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState} from 'react'
-import {Link, useNavigate} from 'react-router-dom'
+import {Link, useNavigate, useParams} from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import {getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { deleteUserStart, deleteUserSuccessful, deleteUserfaliors, updateUserStart,updateUserSuccess,updateUserFailure, signoutFaliors, signInStart, signoutSuccessful } from '../redux/user/userSlice';
@@ -24,6 +24,8 @@ export default function Profile() {
    //error for show listing
    const [showListingerror , setshowListingerror]= useState(false);
    const [userListing, setUserListing]= useState([]);
+
+
 
    //image upload in fire base
   useEffect(()=>{
@@ -172,6 +174,7 @@ const deletelistingHandler = async (listingId) =>{
 
 }
 
+
   return (
     <div className=' max-w-lg mx-auto p-3 '>
        <h1 className='text-3xl text-center font-semibold my-7'> Profile</h1>
@@ -214,10 +217,10 @@ const deletelistingHandler = async (listingId) =>{
           <p className='text-center text-2xl'>Your Listing</p>
           {
               userListing.map((list)=>(<div key={list._id} className='flex border border-gray-700 w-full justify-between items-center p-3 rounded-lg gap-4'>
-              <Link to={`/listing/${data._id}`}>
+              <Link to={`/listing/${list._id}`}>
               <img src={list.imageUrls[0]} className='w-16 h-16 object-contain '/>
               </Link>
-              <Link to={`/listing/${data._id}`}>
+              <Link to={`/listing/${list._id}`}>
               <p className='text-slate-600 hover:underline font-semibold truncate flex-1'>{list.name}</p>
               </Link>
       

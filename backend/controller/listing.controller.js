@@ -51,12 +51,17 @@ exports.deleteListing = async (req, res) => {
 exports.updateListing = async (req, res) => {
     const listing = await Listing.findById(req.params.id);
     if (!listing) {
-      return next(errorHandler(404, 'Listing not found!'));
+      return res.status(404).json({
+        success: false,
+        message: "listing not found!",
+      })
     }
     if (req.user.id !== listing.userRef) {
-      return next(errorHandler(401, 'You can only update your own listings!'));
+      return res.status(401).json({
+        success: false,
+        message:'You can only update your own listings!'
+      }) 
     }
-  
     try {
       const updatedListing = await Listing.findByIdAndUpdate(
         req.params.id,
