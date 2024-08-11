@@ -80,4 +80,23 @@ exports.updateListing = async (req, res) => {
 
  
 
-  
+  //get listing by specfic id
+  exports.getListing = async (req,res)=>{
+    try{
+        const listingItems = await Listing.findById(req.params.id);
+        if(!listingItems){
+          return res.status(404).json({
+            success:false,
+            message: "listing not found",
+          })
+        }
+        return res.status(200).json(listingItems);
+    }
+    catch(error){
+      return res.status(500).json({
+        success:false,
+        message: "server error",
+        error:error.message,
+    })
+    }
+  }
