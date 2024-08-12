@@ -9,6 +9,7 @@ import Header from './components/Header'
 import CreateListing from './pages/CreateListing'
 import ListingItem from './pages/ListingItem'
 import UpdateListing from './pages/UpdateListing'
+import Search from './pages/Search'
 // import Privateroute from './components/Privateroute'
 
 
@@ -25,6 +26,7 @@ export default function App() {
       <Route path='/create-listing' element={<CreateListing/>}/>
       <Route path='/listing/:id' element={<ListingItem/>}/>
       <Route path='/update-listing/:listingId' element={<UpdateListing/>}/>
+      <Route path='/search' element={<Search />} />
 
       {/* <Route element={<Privateroute/>}>
           <Route path='/profile' element={Profile}/>
