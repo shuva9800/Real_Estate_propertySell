@@ -41,8 +41,6 @@ exports.signupHandler = async (req,res) =>{
 
     }
     catch(error){
-        console.log("server problem");
-        console.log(error)
         return res.status(500).json({
             success: false,
             error: error.message
@@ -95,8 +93,6 @@ exports.loginHandler = async (req,res)=>{
        }
     }
     catch(error){
-        console.log("server problem");
-        console.log(error)
         return res.status(500).json({
             success: false,
             error: error.message
