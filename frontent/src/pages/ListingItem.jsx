@@ -136,8 +136,8 @@ export default function ListingItem() {
                 {listing.furnished ? 'Furnished' : 'Unfurnished'}
               </li>
             </ul>
-            {/* listing.userRef !== currentUser._id  */}
-            {currentUser && listing.userRef === currentUser._id && !contact && (
+
+            {currentUser && listing.userRef !== currentUser._id && !contact && (
               <button
                 onClick={() => setContact(true)}
                 className='bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3'
