@@ -187,3 +187,29 @@ exports.google = async (req, res) => {
     })
     }
   }
+
+  //for email porpuse
+
+  exports.getUser = async (req,res)=>{
+    try{
+      const user = await User.findById(req.params.id);
+  
+      if (!user){
+        return res.status(404).json({
+          success: false,
+          message:"user not found!"
+        })
+      } 
+      const { password: pass, ...rest } = user._doc;
+
+      // user.password = "undefined";
+      res.status(200).json(rest);
+    }
+    catch(error){
+      return res.status(500).json({
+        success:false,
+        message: "server error",
+        error:error.message,
+    })
+    }
+  }
