@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const cloudinary = require('./config/cloudinaryUpload');
 const fileUpload = require('express-fileupload');
 const listingRouter = require('./routes/listing.route')
+const cors = require('cors')
 
 
 dotenv.config();
@@ -17,6 +18,7 @@ app.listen(PORT, ()=>{
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors())
 //database connection
 dbconnect();
 //cloudinary connection
