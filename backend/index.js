@@ -7,7 +7,8 @@ const cookieParser = require('cookie-parser');
 const cloudinary = require('./config/cloudinaryUpload');
 const fileUpload = require('express-fileupload');
 const listingRouter = require('./routes/listing.route')
-const cors = require('cors')
+import path from 'path';
+// const cors = require('cors')
 
 
 dotenv.config();
@@ -18,18 +19,11 @@ app.listen(PORT, ()=>{
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors())
+// app.use(cors())
+
 //database connection
 dbconnect();
-//cloudinary connection
-cloudinary();
-app.use(fileUpload(
-    {
-        useTempFiles : true,
-        tempFileDir : '/tmp/'
-    }
-));
-
+const __dirname = path.resolve();
 
 app.get("/", (req,res)=>{
     return res.status(200).json({
@@ -40,3 +34,9 @@ app.get("/", (req,res)=>{
 ///routing use
 app.use('/api/v1',signupRouter)
 app.use('/api/v1/listing',listingRouter)
+
+app.use(express.static(path.join(__dirname, '/client/dist')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+  })
+  
